@@ -1,4 +1,81 @@
-h1{
-    color: tomato;
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-family: 'Calibri', 'Trebuchet MS', sans-serif;
+    font-size: 1rem;
 
 }
+
+.container {
+    width: 80%;
+    max-width:1000px;
+    margin: 0 auto;
+
+}
+
+.title {
+    margin: 0 auto;
+    text-transform: uppercase;
+    font-size:3rem;
+    margin:3rem 0;
+    color: rgb(34, 59, 133);
+    text-align: center;
+}
+
+
+form{
+    display: flex;
+}
+
+input {
+    flex-grow:1;
+   line-height: 1.5rem;
+   margin: 5px;
+   padding: 5px;
+}
+
+button{
+    line-height: 1.5rem;
+    margin:5px;
+    padding: 0 10px;
+    width:20%;
+}
+
+.record{
+    height:40px;
+    border: 1px solid grey;
+    border-radius: 2px;
+    margin: 5px 5px 10px 5px;
+    display:flex;
+    align-items: center;
+}
+
+.id-box{
+    width:50px;
+    text-align: center;
+}
+
+
+.record i {
+    cursor: pointer;
+}
+
+.fa-trash {
+    margin-right:20px;
+}
+.fa-pencil, .fa-xmark, .fa-check {
+    margin-left:auto ;
+    margin-right: 20px;
+}
+
+[id^="task-edit-"]{
+    border: none;
+    appearance: none;
+    outline:none;
+    font-size: 1rem;
+    color:rgb(255, 255, 255);
+    padding-left: 10px;
+    background: linear-gradient(90deg, #083b54, #ffffff);
+}
+

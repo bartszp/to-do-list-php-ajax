@@ -1,11 +1,13 @@
 <?php
 
 session_start();
+$_SESSION['checkpoint_1']= 'check1';
 
-require_once("connect_db.php");
+// $pdo = require_once('database.php');    
+// $tasks = require_once('list.php');
 
-$connection = new mysqli($host,$db_user, $db_password,$db_name);
-echo "$connection->connect_errno";
+
+
 ?>
 
 
@@ -16,22 +18,29 @@ echo "$connection->connect_errno";
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>To do list v1</title>
+    <link rel="stylesheet" href="./style.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
 </head>
 
 <body>
 
-    <h1>To do list</h1>
-    <form method="post">
+    <div class="container" id ="container">
+        <div class="title">To do list</div>
+        <form method="post" id="form">
+            <input type="text" name="task" id="task" placeholder="Add task here" autocomplete="off">
+            <button type="submit" id="submit">Add task</button>
+        </form>
+        <div id="tasks-list">
 
-        <input type="text" name="task" id="task">
-        <button type="submit">Submit</button>
-
-    </form>
+        </div>
 
 
-    
+
+
+
+    </div>
+
+
     <script src="./app.js"></script>
 </body>
 
