@@ -34,7 +34,7 @@ $_SESSION['checkpoint_1'] = 'check1';
             </div>
             <div class="label-input-date">
                 <label for="dueDate">Date</label>
-                <input type="date" name="dueDate" id="dueDate">
+                <input type="date" name="dueDate" id="due-date">
             </div>
             <div class="label-input-priority">
             <label for="priority">Priority</label>

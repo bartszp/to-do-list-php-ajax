@@ -7,6 +7,11 @@ let input = document.getElementById('task');
 let container = document.getElementById('container');
 let tasksList = document.getElementById('tasks-list');
 let editFlag;
+let priorityLow = document.getElementById('priority-low');
+let priorityMedium = document.getElementById('priority-medium');
+let priorityHigh = document.getElementById('priority-high');
+let dueDate = document.getElementById('due-date')
+console.log(dueDate.value);
 
 
 
@@ -22,7 +27,6 @@ function displayRecord(id, description) {
     <i class="fa fa-trash" aria-hidden="true"></i>
     </div>`
 }
-
 
 //Load all task from data base and display them
 function getTasks() {
@@ -55,13 +59,27 @@ function clearTasksList() {
 
 
 //Submit task
-submitButton.addEventListener("click", function (e) {
-    e.preventDefault()
-    addTask(input.value);
+// submitButton.addEventListener("click", function (e) {
+//     e.preventDefault()
+//     sendTask(input.value);
+//     form.reset();
+// })
+
+submitButton.addEventListener("click", function (e){
+    e.preventDefault();
+    collectTaskInfo()
     form.reset();
+
 })
 
-function addTask(task) {
+function collectTaskInfo(){
+    let task = input.value;
+    let regDate = Date.now();
+    console.log(dueDate.value)
+    sendTask(task, regDate);
+}
+
+function sendTask(task, dueDate, ) {
     let xhr = new XMLHttpRequest();
     xhr.open('POST', 'add-task.php', true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
