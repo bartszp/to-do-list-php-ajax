@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-$_SESSION['checkpoint_1']= 'check1';
+$_SESSION['checkpoint_1'] = 'check1';
 
 // $pdo = require_once('database.php');    
 // $tasks = require_once('list.php');
@@ -24,10 +24,27 @@ $_SESSION['checkpoint_1']= 'check1';
 
 <body>
 
-    <div class="container" id ="container">
+    <div class="container" id="container">
         <div class="title">To do list</div>
+
         <form method="post" id="form">
-            <input type="text" name="task" id="task" placeholder="Add task here" autocomplete="off">
+            <div class="label-input-task">
+                <label for="task">Task</label>
+                <input type="text" name="task" id="task" placeholder="Add task here" autocomplete="off">
+            </div>
+            <div class="label-input-date">
+                <label for="dueDate">Date</label>
+                <input type="date" name="dueDate" id="dueDate">
+            </div>
+            <div class="label-input-priority">
+            <label for="priority">Priority</label>
+                
+                <fieldset>
+                    <input type="radio" name="priority" id="priority-low" checked>
+                    <input type="radio" name="priority" id="priority-medium">
+                    <input type="radio" name="priority" id="priority-high">
+                </fieldset>
+            </div>
             <button type="submit" id="submit">Add task</button>
         </form>
         <div id="tasks-list">

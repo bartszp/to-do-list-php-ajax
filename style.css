@@ -28,11 +28,44 @@ form{
     display: flex;
 }
 
-input {
-    flex-grow:1;
-   line-height: 1.5rem;
-   margin: 5px;
-   padding: 5px;
+[class ^="label-input-"]{
+    display:flex;
+    flex-direction:column;    
+}
+
+[class ^="label-input-"] label{
+    margin-left:5px;    
+}
+
+.label-input-task{
+    width:70%;
+}
+
+input, fieldset {
+    line-height: 1.5rem;
+    height:80%;
+    margin:5px;
+    padding:5px;
+    border: 1px solid grey;
+    border-radius: 2px;
+}
+
+fieldset{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#priority-low{
+    accent-color: rgb(64, 206, 3);
+}
+
+#priority-medium{
+    accent-color: rgb(208, 215, 0);
+}
+#priority-high{
+    accent-color: rgb(206, 3, 3);
 }
 
 button{
@@ -40,6 +73,8 @@ button{
     margin:5px;
     padding: 0 10px;
     width:20%;
+    height:2.4rem;
+    align-self: self-end;
 }
 
 .record{
