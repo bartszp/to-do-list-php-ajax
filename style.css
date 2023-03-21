@@ -93,9 +93,41 @@ button{
     text-align: center;
 }
 
+.task-desc {
+    width:100%;
+    margin-left: 20px;
+}
 
-.record i {
+.due-date{
+    width: 240px;
+    text-align: center ;
+}
+
+.priorities{
+    display:flex;
+    flex-direction: row;
+    width:180px;
+    justify-content: center;
+}
+
+.indicator   {
+    height: 15px;
+    width: 15px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 5px;
+
+}
+
+.edit-buttons{
+    width:220px;
+    display:flex;
+}
+
+.record  i {
     cursor: pointer;
+
 }
 
 .fa-trash, .fa-xmark {
@@ -116,4 +148,8 @@ button{
     background: linear-gradient(90deg, #083b54, #ffffff);
     width:100%;
 }
+
+
+
+
 

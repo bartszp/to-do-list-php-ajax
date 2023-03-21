@@ -2,6 +2,7 @@
 
 session_start();
 $_SESSION['checkpoint_1'] = 'check1';
+echo "<script>console.log('dupa');</script>";
 
 // $pdo = require_once('database.php');    
 // $tasks = require_once('list.php');
@@ -27,7 +28,7 @@ $_SESSION['checkpoint_1'] = 'check1';
     <div class="container" id="container">
         <div class="title">To do list</div>
 
-        <form method="post" id="form">
+        <form method="post" id="form" action="add-task.php">
             <div class="label-input-task">
                 <label for="task">Task</label>
                 <input type="text" name="task" id="task" placeholder="Add task here" autocomplete="off">
@@ -37,8 +38,8 @@ $_SESSION['checkpoint_1'] = 'check1';
                 <input type="date" name="dueDate" id="due-date">
             </div>
             <div class="label-input-priority">
-            <label for="priority">Priority</label>
-                
+                <label for="priority">Priority</label>
+
                 <fieldset>
                     <input type="radio" name="priority" id="priority-low" checked>
                     <input type="radio" name="priority" id="priority-medium">
@@ -48,9 +49,20 @@ $_SESSION['checkpoint_1'] = 'check1';
             <button type="submit" id="submit">Add task</button>
         </form>
         <div id="tasks-list">
-
         </div>
-
+        <div class="record" id="${id}">
+            <div class="task-desc" id="task-desc-${id}">${description}</div>
+            <div class= "due-date">${duedate}</div>
+            <div class="priorities">
+                <span class="indicator" id="priority-low"></span>
+                <span class="indicator" id="priority-med"></span>
+                <span class="indicator" id="priority-high"></span>
+            </div>
+            <div class = "edit-buttons">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+            <i class="fa fa-trash" aria-hidden="true"></i>
+            </div>
+        </div>
 
 
 

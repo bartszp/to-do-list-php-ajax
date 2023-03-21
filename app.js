@@ -22,7 +22,7 @@ getTasks();
 function displayRecord(id, description) {
     return `<div class="record" id="${id}">
     <div class="id-box">${id}</div>
-    <div id="task-desc-${id}">${description}</div>
+    <div class = "task-desc" id="task-desc-${id}">${description}</div>
     <i class="fa fa-pencil" aria-hidden="true"></i>
     <i class="fa fa-trash" aria-hidden="true"></i>
     </div>`
@@ -75,11 +75,18 @@ submitButton.addEventListener("click", function (e){
 function collectTaskInfo(){
     let task = input.value;
     let regDate = Date.now();
-    console.log(dueDate.value)
-    sendTask(task, regDate);
+    let dueDateValue = dueDate.valueAsNumber;
+    let priority;
+    if(priorityLow.checked){priority = 1}
+    else if (priorityMedium.checked){ priority = 2}
+    else if (priorityHigh.checked){priority = 3}
+    console.log(priority);
+    sendTask(task, regDate, dueDateValue, priority);
 }
 
-function sendTask(task, dueDate, ) {
+
+
+function sendTask(task, regDate, dueDateValue, priority) {
     let xhr = new XMLHttpRequest();
     xhr.open('POST', 'add-task.php', true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -90,7 +97,8 @@ function sendTask(task, dueDate, ) {
             getTasks();
         }
     }
-    xhr.send(`task=${task}`);
+    console.log(`task=${task}&regdate=${regDate}&duedate=${dueDateValue}&priority=${priority}`)
+    xhr.send(`task=${task}&regdate=${regDate}&duedate=${dueDateValue}&priority=${priority}`);
 
 }
 
