@@ -2,7 +2,7 @@
 
 session_start();
 $_SESSION['checkpoint_1'] = 'check1';
-echo "<script>console.log('dupa');</script>";
+
 
 // $pdo = require_once('database.php');    
 // $tasks = require_once('list.php');
@@ -50,19 +50,7 @@ echo "<script>console.log('dupa');</script>";
         </form>
         <div id="tasks-list">
         </div>
-        <div class="record" id="${id}">
-            <div class="task-desc" id="task-desc-${id}">${description}</div>
-            <div class= "due-date">${duedate}</div>
-            <div class="priorities">
-                <span class="indicator" id="priority-low"></span>
-                <span class="indicator" id="priority-med"></span>
-                <span class="indicator" id="priority-high"></span>
-            </div>
-            <div class = "edit-buttons">
-            <i class="fa fa-pencil" aria-hidden="true"></i>
-            <i class="fa fa-trash" aria-hidden="true"></i>
-            </div>
-        </div>
+
 
 
 
@@ -70,7 +58,7 @@ echo "<script>console.log('dupa');</script>";
     </div>
 
 
-    <script src="./app.js"></script>
+    <script src="./app.js" type="module"></script>
 </body>
 
 </html>

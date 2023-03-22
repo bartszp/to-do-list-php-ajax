@@ -1,5 +1,5 @@
-console.log("works")
-console.log("works")
+import { getDayName, getMonthName, getOrdinalNumber } from '../common-functions/common-functions.js';
+
 
 let form = document.getElementById('form');
 let submitButton = document.getElementById('submit');
@@ -11,7 +11,6 @@ let priorityLow = document.getElementById('priority-low');
 let priorityMedium = document.getElementById('priority-medium');
 let priorityHigh = document.getElementById('priority-high');
 let dueDate = document.getElementById('due-date')
-console.log(dueDate.value);
 
 
 
@@ -19,14 +18,37 @@ console.log(dueDate.value);
 getTasks();
 
 //Display task, each in seperate record
-function displayRecord(id, description) {
+function displayRecord(id, description, duedate, priority) {
+    let highlightArray = ["grey-dot", "grey-dot", "grey-dot"];
+    highlightArray[priority] = `highlight-${priority}`;
     return `<div class="record" id="${id}">
-    <div class="id-box">${id}</div>
-    <div class = "task-desc" id="task-desc-${id}">${description}</div>
+    <div class="task-desc" id="task-desc-${id}">${description}</div>
+    <div class= "due-date">${convertTimestamp(duedate)}</div>
+    <div class="priorities">
+        <span class="indicator" id="${highlightArray[0]}"></span>
+        <span class="indicator" id="${highlightArray[1]}"></span>
+        <span class="indicator" id="${highlightArray[2]}"></span>
+    </div>
+    <div class = "edit-buttons">
     <i class="fa fa-pencil" aria-hidden="true"></i>
     <i class="fa fa-trash" aria-hidden="true"></i>
-    </div>`
+    </div>
+</div>`
 }
+
+function convertTimestamp(duedate) {
+    if (duedate === 0) {
+        return "- - -"
+    }
+    let displayDate = new Date(duedate);
+    let month = getMonthName(displayDate.getMonth());
+    let ordinalDay = getOrdinalNumber(displayDate.getDate());
+    return ordinalDay + " of " + month;
+}
+
+
+convertTimestamp(2147483647)
+
 
 //Load all task from data base and display them
 function getTasks() {
@@ -45,9 +67,9 @@ function getTasks() {
 function displayTasksList(tasks) {
     tasks.forEach(elem => {
         if (tasksList.lastElementChild === null) {
-            tasksList.innerHTML = displayRecord(elem.id, elem.task);
+            tasksList.innerHTML = displayRecord(elem.id, elem.task, elem['due-date'], elem.priority);
         } else {
-            tasksList.lastElementChild.insertAdjacentHTML('afterend', displayRecord(elem.id, elem.task));
+            tasksList.lastElementChild.insertAdjacentHTML('afterend', displayRecord(elem.id, elem.task, elem['due-date'], elem.priority));
         }
     })
 }
@@ -65,22 +87,21 @@ function clearTasksList() {
 //     form.reset();
 // })
 
-submitButton.addEventListener("click", function (e){
+submitButton.addEventListener("click", function (e) {
     e.preventDefault();
     collectTaskInfo()
     form.reset();
 
 })
 
-function collectTaskInfo(){
+function collectTaskInfo() {
     let task = input.value;
     let regDate = Date.now();
     let dueDateValue = dueDate.valueAsNumber;
     let priority;
-    if(priorityLow.checked){priority = 1}
-    else if (priorityMedium.checked){ priority = 2}
-    else if (priorityHigh.checked){priority = 3}
-    console.log(priority);
+    if (priorityLow.checked) { priority = 0 }
+    else if (priorityMedium.checked) { priority = 1 }
+    else if (priorityHigh.checked) { priority = 2 }
     sendTask(task, regDate, dueDateValue, priority);
 }
 
@@ -92,12 +113,10 @@ function sendTask(task, regDate, dueDateValue, priority) {
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onload = function () {
         if (this.status === 200) {
-            console.log('task registered')
             clearTasksList();
             getTasks();
         }
     }
-    console.log(`task=${task}&regdate=${regDate}&duedate=${dueDateValue}&priority=${priority}`)
     xhr.send(`task=${task}&regdate=${regDate}&duedate=${dueDateValue}&priority=${priority}`);
 
 }
@@ -106,7 +125,7 @@ function sendTask(task, regDate, dueDateValue, priority) {
 // Remove task
 container.addEventListener('click', function (e) {
     if (e.target.getAttribute("class") === "fa fa-trash") {
-        let id = e.target.parentElement.getAttribute("id");
+        let id = e.target.parentElement.parentElement.getAttribute("id");
         removeTask(id)
     }
 });
@@ -127,9 +146,8 @@ function removeTask(id) {
 
 //Edit task
 container.addEventListener('click', function (e) {
-    console.log('1')
     if (e.target.getAttribute('class') === 'fa fa-pencil') {
-        let id = e.target.parentElement.getAttribute('id');
+        let id = e.target.parentElement.parentElement.getAttribute('id');
         let record = document.getElementById(id);
         let taskDesc = document.getElementById(`task-desc-${id}`).innerText;
         handleEdit(record, id, taskDesc);
@@ -139,9 +157,7 @@ container.addEventListener('click', function (e) {
 
 
 container.addEventListener("dblclick", function (e) {
-    console.log('2')
-    
-    let id = e.target.getAttribute('id');
+    let id = e.target.parentElement.getAttribute('id');
     let record = document.getElementById(id);
     let taskDesc = document.getElementById(`task-desc-${id}`).innerText;
     handleEdit(record, id, taskDesc);
@@ -151,7 +167,6 @@ container.addEventListener("dblclick", function (e) {
 function handleEdit(record, id, taskDesc) {
     makeEditable(record, id, taskDesc)
     container.addEventListener('click', function (e) {
-        console.log('3')
         if (e.target.getAttribute('class') === 'fa fa-xmark') {
             getTasks();
         } else if (e.target.getAttribute('class') === 'fa fa-check') {
@@ -161,14 +176,12 @@ function handleEdit(record, id, taskDesc) {
         e.stopPropagation();
     })
 
-    window.addEventListener('click', function (e){
-        console.log(Date.now())
+    window.addEventListener('click', function (e) {
         getTasks();
-    }, {once: true})
+    }, { once: true })
 
     window.addEventListener('keydown', function (e) {
         if (e.key === "Enter" && editFlag === true) {
-            console.log(Date.now())
             let updatedTaskDesc = document.getElementById(`task-edit-${id}`).value;
             updateTask(id, updatedTaskDesc);
         } else if (e.code === "Escape" && editFlag === true) {
@@ -207,12 +220,3 @@ function updateTask(id, updatedTaskDesc) {
         }
     }
 }
-
-//Discard task edit
-
-// container.addEventListener('click', function(e){
-//     if(e.target.getAttribute('class') === 'fa fa-xmark'){
-//         let id = e.target.parentElement.getAttribute('id');
-//         console.log('jestesmy')
-//     }
-// })

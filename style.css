@@ -111,15 +111,25 @@ button{
 }
 
 .indicator   {
-    height: 15px;
-    width: 15px;
+    height: 14px;
+    width: 14px;
     background-color: #bbb;
     border-radius: 50%;
     display: inline-block;
     margin: 5px;
-
 }
 
+#highlight-0 {
+    background-color: rgb(64, 206, 3);
+}
+
+#highlight-1 {
+    background-color: rgb(208, 215, 0);
+}
+
+#highlight-2 {
+    background-color: rgb(206, 3, 3);
+}
 .edit-buttons{
     width:220px;
     display:flex;
@@ -127,7 +137,6 @@ button{
 
 .record  i {
     cursor: pointer;
-
 }
 
 .fa-trash, .fa-xmark {
