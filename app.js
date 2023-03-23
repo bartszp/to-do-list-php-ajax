@@ -11,8 +11,12 @@ let priorityLow = document.getElementById('priority-low');
 let priorityMedium = document.getElementById('priority-medium');
 let priorityHigh = document.getElementById('priority-high');
 let dueDate = document.getElementById('due-date')
+let categoryBtns = document.getElementsByClassName("category-btn");
+let categoryBtnsField = document.getElementsByClassName("categories-buttons")[0];
+let sortingBtns = document.getElementsByClassName("sorting-btn");
+let sortingBtnsField = document.getElementsByClassName("sorting-buttons")[0];
 
-
+console.log(sortingBtns[1]);
 
 //Load all task from data base and display them
 getTasks();
@@ -157,7 +161,12 @@ container.addEventListener('click', function (e) {
 
 
 container.addEventListener("dblclick", function (e) {
-    let id = e.target.parentElement.getAttribute('id');
+    let id;
+    if(e.target.getAttribute("class")=== "record"){
+        console.log("eneter");
+        id = e.target.getAttribute('id');
+    } else {
+    id = e.target.parentElement.getAttribute('id');}
     let record = document.getElementById(id);
     let taskDesc = document.getElementById(`task-desc-${id}`).innerText;
     handleEdit(record, id, taskDesc);
@@ -220,3 +229,25 @@ function updateTask(id, updatedTaskDesc) {
         }
     }
 }
+
+
+//Highlight clicked button
+function toggleButtons(buttons, activeButton){
+    buttons = Array.from(buttons);
+    buttons.forEach((elem)=>{
+        elem.classList.remove("active-btn");
+    })
+    activeButton.classList.add("active-btn");
+}
+
+//Listener on category buttons to highlight the one that is clicked
+categoryBtnsField.addEventListener("click", function(e){
+    if(e.target.getAttribute("class") === "category-btn")
+    toggleButtons(categoryBtns,e.target);
+});
+
+//Listener on sorting buttons to highlign the one that is clicked
+sortingBtnsField.addEventListener("click", function(e){
+    if(e.target.getAttribute("class") === "sorting-btn")
+    toggleButtons(sortingBtns, e.target);
+});

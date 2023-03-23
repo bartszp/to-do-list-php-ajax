@@ -48,6 +48,25 @@ $_SESSION['checkpoint_1'] = 'check1';
             </div>
             <button type="submit" id="submit">Add task</button>
         </form>
+        <div class="sorting-options">
+            <div class="categories-block">
+                <h5>Sort by</h5>
+                <div class="categories-buttons">
+                    <button class="category-btn" id="alphabetical">Task</button>
+                    <button class="category-btn" id="regdate">Registration Time</button>
+                    <button class="category-btn" id="alphabetical">Due Date</button>
+                    <button class="category-btn" id="alphabetical">Priority</button>
+
+                </div>
+            </div>
+            <div class="sorting-block">
+                <h5>Sorting order</h5>
+                <div class="sorting-buttons">
+                    <button class="sorting-btn" id="desc">Descenting</button>
+                    <button class="sorting-btn" id="asc">Ascending</button>
+                </div>
+            </div>
+        </div>
         <div id="tasks-list">
         </div>
 
