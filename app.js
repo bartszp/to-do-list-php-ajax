@@ -1,6 +1,6 @@
 import { getDayName, getMonthName, getOrdinalNumber } from '../common-functions/common-functions.js';
 
-
+let title = document.getElementsByClassName("title")[0];
 let form = document.getElementById('form');
 let submitButton = document.getElementById('submit');
 let input = document.getElementById('task');
@@ -17,7 +17,7 @@ let sortingBtns = document.getElementsByClassName("sorting-btn");
 let sortingBtnsField = document.getElementsByClassName("sorting-buttons")[0];
 let categoryOrderFlag = "duedate";
 let sortingOrderFlag = "asc";
-let editedTaskId;
+let editedTaskId = null;
 console.log(sortingBtns[1]);
 
 //Activate "Registration Time" button and sorting in descending order as the defualt one
@@ -25,29 +25,12 @@ toggleButtons(categoryBtns, document.getElementById(categoryOrderFlag));
 toggleButtons(sortingBtns, document.getElementById(sortingOrderFlag));
 
 
-
+setTimeout(function(){title.innerText="Dupa"}, 3000);
 
 //Load all task from data base and display them
 getTasks();
 
-//Display task, each in seperate record
-function displayRecord(id, description, duedate, priority) {
-    let highlightArray = ["grey-dot", "grey-dot", "grey-dot"];
-    highlightArray[priority] = `highlight-${priority}`;
-    return `<div class="record" id="${id}">
-    <div class="task-desc" id="task-desc-${id}">${description}</div>
-    <div class= "due-date">${convertTimestamp(duedate)}</div>
-    <div class="priorities">
-        <span class="indicator" id="${highlightArray[0]}"></span>
-        <span class="indicator" id="${highlightArray[1]}"></span>
-        <span class="indicator" id="${highlightArray[2]}"></span>
-    </div>
-    <div class = "edit-buttons">
-    <i class="fa fa-pencil" aria-hidden="true"></i>
-    <i class="fa fa-trash" aria-hidden="true"></i>
-    </div>
-</div>`
-}
+
 
 function convertTimestamp(duedate) {
     if (duedate === 0) {
@@ -69,23 +52,21 @@ function sortingTasks(tasksArray, category, order) {
         }
         return result;
     })
-    
-    if (category === "alphabetical"){
+
+    if (category === "alphabetical") {
         category = 1;
-    } else if (category === "regdate"){
+    } else if (category === "regdate") {
         category = 2;
-    } else if (category === "duedate"){
+    } else if (category === "duedate") {
         category = 3;
-    } else if (category === "priority"){
+    } else if (category === "priority") {
         category = 4;
     }
-    console.log(category)
-    if (order === "desc"){
-        result = result.sort((a,b) => {return b[category]-a[category]})
+    if (order === "desc") {
+        result = result.sort((a, b) => { return b[category] - a[category] })
     } else {
-        result = result.sort((a,b) => {return a[category]-b[category]})
+        result = result.sort((a, b) => { return a[category] - b[category] })
     }
-    console.log(result)
     return result
 }
 
@@ -96,11 +77,43 @@ function getTasks() {
     xhr.open('GET', 'list.php', true);
     xhr.onload = function () {
         let tasksArray = (JSON.parse(this.responseText));
-        clearTasksList();
-        displayTasksList(sortingTasks(tasksArray,categoryOrderFlag,sortingOrderFlag));
-        editFlag = false;
+        // clearTasksList();
+        displayTasksList(sortingTasks(tasksArray, categoryOrderFlag, sortingOrderFlag));
+        if (editedTaskId != null) {
+            let editedRecord = document.getElementById(editedTaskId)
+            editedRecord.style.outline = '2px #083b54 solid';
+            focusInput(editedRecord.children[0]);
+        }
     }
     xhr.send();
+}
+
+//Display task, each in seperate record
+function displayRecord(id, description, duedate, priority) {
+    let highlightArray = ["grey-dot", "grey-dot", "grey-dot"];
+    highlightArray[priority] = `highlight-${priority}`;
+    if (editedTaskId != id) {
+        return `<div class="record" id="${id}">
+    <div class="task-desc" id="task-desc-${id}">${description}</div>
+    <div class= "due-date">${convertTimestamp(duedate)}</div>
+    <div class="priorities">
+        <span class="indicator" id="${highlightArray[0]}"></span>
+        <span class="indicator" id="${highlightArray[1]}"></span>
+        <span class="indicator" id="${highlightArray[2]}"></span>
+    </div>
+    <div class = "edit-buttons">
+    <i class="fa fa-pencil" aria-hidden="true"></i>
+    <i class="fa fa-trash" aria-hidden="true"></i>
+    </div>
+</div>`
+    } else {
+        return `<div class="record edited" id = "${id}">
+        <input type="text" name="task" id="task-edit-${id}" value="${description}" autocomplete="off">
+        <i class="fa fa-check" aria-hidden="true"></i>
+        <i class="fa fa-xmark" aria-hidden="true"></i>
+        <i class="fa fa-trash" aria-hidden="true"></i>
+        </div>`
+    }
 }
 
 //Displays all tasks from server
@@ -114,23 +127,13 @@ function displayTasksList(tasks) {
     })
 }
 
-//Clear tasks list
-function clearTasksList() {
-    tasksList.innerHTML = "";
-}
-
 
 //Submit task
-// submitButton.addEventListener("click", function (e) {
-//     e.preventDefault()
-//     sendTask(input.value);
-//     form.reset();
-// })
-
 submitButton.addEventListener("click", function (e) {
     e.preventDefault();
     collectTaskInfo()
     form.reset();
+    return false;
 
 })
 
@@ -153,7 +156,7 @@ function sendTask(task, regDate, dueDateValue, priority) {
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onload = function () {
         if (this.status === 200) {
-            clearTasksList();
+            // clearTasksList();
             getTasks();
         }
     }
@@ -165,6 +168,7 @@ function sendTask(task, regDate, dueDateValue, priority) {
 // Remove task
 container.addEventListener('click', function (e) {
     if (e.target.getAttribute("class") === "fa fa-trash") {
+        e.preventDefault();
         let id = e.target.parentElement.parentElement.getAttribute("id");
         removeTask(id)
     }
@@ -176,7 +180,7 @@ function removeTask(id) {
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onload = function () {
         if (this.status === 200) {
-            clearTasksList();
+            // clearTasksList();
             getTasks();
         }
     }
@@ -211,9 +215,10 @@ container.addEventListener("dblclick", function (e) {
 
 function handleEdit(record, id, taskDesc) {
     editedTaskId = id;
-    makeEditable(record, id, taskDesc)
+    getTasks();
     container.addEventListener('click', function (e) {
         if (e.target.getAttribute('class') === 'fa fa-xmark') {
+            editedTaskId = null;
             getTasks();
         } else if (e.target.getAttribute('class') === 'fa fa-check') {
             let updatedTaskDesc = document.getElementById(`task-edit-${id}`).value;
@@ -228,17 +233,17 @@ function handleEdit(record, id, taskDesc) {
     }, { once: true })
 
     window.addEventListener('keydown', function (e) {
-        if (e.key === "Enter" && editFlag === true) {
+        if (e.key === "Enter" && editedTaskId != null) {
             let updatedTaskDesc = document.getElementById(`task-edit-${id}`).value;
             updateTask(id, updatedTaskDesc);
-        } else if (e.code === "Escape" && editFlag === true) {
+        } else if (e.code === "Escape" && editedTaskId != null) {
             getTasks();
         }
+
     })
 }
 
 function makeEditable(record, id, taskDesc) {
-    editFlag = true;
     record.style.outline = '2px #083b54 solid';
     record.innerHTML = `<div class="id-box">${id}</div>
     <input type="text" name="task" id="task-edit-${id}" value="${taskDesc}" autocomplete="off">
@@ -246,7 +251,6 @@ function makeEditable(record, id, taskDesc) {
     <i class="fa fa-xmark" aria-hidden="true"></i>
     <i class="fa fa-trash" aria-hidden="true"></i>`;
     focusInput(record.children[1]);
-
 }
 
 function focusInput(input) {
@@ -255,7 +259,7 @@ function focusInput(input) {
     input.focus();
 }
 
-
+//Send updated task to server and update the list
 function updateTask(id, updatedTaskDesc) {
     let xhr = new XMLHttpRequest();
     xhr.open('POST', 'update-task.php', true);
@@ -263,6 +267,7 @@ function updateTask(id, updatedTaskDesc) {
     xhr.send(`id=${id}&updatedTaskDesc=${updatedTaskDesc}`);
     xhr.onload = function () {
         if (this.status === 200) {
+            editedTaskId = null;
             getTasks();
         }
     }
@@ -291,8 +296,8 @@ categoryBtnsField.addEventListener("click", function (e) {
 sortingBtnsField.addEventListener("click", function (e) {
     if (e.target.getAttribute("class") === "sorting-btn")
         toggleButtons(sortingBtns, e.target);
-        sortingOrderFlag = e.target.getAttribute("id");
-        getTasks()
+    sortingOrderFlag = e.target.getAttribute("id");
+    getTasks()
     console.log('there')
 
 });

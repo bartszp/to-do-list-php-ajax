@@ -31,11 +31,11 @@ $_SESSION['checkpoint_1'] = 'check1';
         <form method="post" id="form" action="add-task.php">
             <div class="label-input-task">
                 <label for="task">Task</label>
-                <input type="text" name="task" id="task" placeholder="Add task here" autocomplete="off">
+                <input type="text" required name="task" id="task" placeholder="Add task here" autocomplete="off">
             </div>
             <div class="label-input-date">
                 <label for="dueDate">Date</label>
-                <input type="date" name="dueDate" id="due-date">
+                <input type="date" required name="dueDate" id="due-date" >
             </div>
             <div class="label-input-priority">
                 <label for="priority">Priority</label>

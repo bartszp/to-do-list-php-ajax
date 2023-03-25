@@ -155,7 +155,9 @@ button{
 [id^="task-edit-"]{
     border: none;
     appearance: none;
-    outline:none;
+    outline: 2px #083b54 solid;
+    outline: none;
+
     font-size: 1rem;
     color:rgb(255, 255, 255);
     padding-left: 10px;
