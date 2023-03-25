@@ -52,7 +52,7 @@ $_SESSION['checkpoint_1'] = 'check1';
             <div class="categories-block">
                 <h5>Sort by</h5>
                 <div class="categories-buttons">
-                    <button class="category-btn" id="alphabetical">Task</button>
+                    <!-- <button class="category-btn" id="alphabetical">Aplphabetical</button> -->
                     <button class="category-btn" id="regdate">Registration Time</button>
                     <button class="category-btn" id="duedate">Due Date</button>
                     <button class="category-btn" id="priority">Priority</button>

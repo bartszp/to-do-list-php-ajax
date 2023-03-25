@@ -15,8 +15,9 @@ let categoryBtns = document.getElementsByClassName("category-btn");
 let categoryBtnsField = document.getElementsByClassName("categories-buttons")[0];
 let sortingBtns = document.getElementsByClassName("sorting-btn");
 let sortingBtnsField = document.getElementsByClassName("sorting-buttons")[0];
-let categoryOrderFlag = "regdate";
-let sortingOrderFlag = "desc";
+let categoryOrderFlag = "duedate";
+let sortingOrderFlag = "asc";
+let editedTaskId;
 console.log(sortingBtns[1]);
 
 //Activate "Registration Time" button and sorting in descending order as the defualt one
@@ -58,24 +59,35 @@ function convertTimestamp(duedate) {
     return ordinalDay + " of " + month;
 }
 
+//Sort array received from server
 function sortingTasks(tasksArray, category, order) {
     //Converting array of object to array of arrays
-    let arrayOfArrays = tasksArray.map(elem => {
+    let result = tasksArray.map(elem => {
         let result = [];
         for (let i = 0; i < Object.keys(elem).length; i++) {
             result.push(Object.entries(elem)[i][1]);
         }
-        console.log(result);
         return result;
     })
-    return arrayOfArrays
+    
+    if (category === "alphabetical"){
+        category = 1;
+    } else if (category === "regdate"){
+        category = 2;
+    } else if (category === "duedate"){
+        category = 3;
+    } else if (category === "priority"){
+        category = 4;
+    }
+    console.log(category)
+    if (order === "desc"){
+        result = result.sort((a,b) => {return b[category]-a[category]})
+    } else {
+        result = result.sort((a,b) => {return a[category]-b[category]})
+    }
+    console.log(result)
+    return result
 }
-
-let obj = {
-    a: 1,
-    b: 2,
-}
-
 
 
 //Load all task from data base and display them
@@ -84,9 +96,8 @@ function getTasks() {
     xhr.open('GET', 'list.php', true);
     xhr.onload = function () {
         let tasksArray = (JSON.parse(this.responseText));
-        sortingTasks(tasksArray);
         clearTasksList();
-        displayTasksList(tasksArray);
+        displayTasksList(sortingTasks(tasksArray,categoryOrderFlag,sortingOrderFlag));
         editFlag = false;
     }
     xhr.send();
@@ -96,9 +107,9 @@ function getTasks() {
 function displayTasksList(tasks) {
     tasks.forEach(elem => {
         if (tasksList.lastElementChild === null) {
-            tasksList.innerHTML = displayRecord(elem.id, elem.task, elem['due-date'], elem.priority);
+            tasksList.innerHTML = displayRecord(elem[0], elem[1], elem[3], elem[4]);
         } else {
-            tasksList.lastElementChild.insertAdjacentHTML('afterend', displayRecord(elem.id, elem.task, elem['due-date'], elem.priority));
+            tasksList.lastElementChild.insertAdjacentHTML('afterend', displayRecord(elem[0], elem[1], elem[3], elem[4]));
         }
     })
 }
@@ -188,7 +199,6 @@ container.addEventListener('click', function (e) {
 container.addEventListener("dblclick", function (e) {
     let id;
     if (e.target.getAttribute("class") === "record") {
-        console.log("eneter");
         id = e.target.getAttribute('id');
     } else {
         id = e.target.parentElement.getAttribute('id');
@@ -200,6 +210,7 @@ container.addEventListener("dblclick", function (e) {
 })
 
 function handleEdit(record, id, taskDesc) {
+    editedTaskId = id;
     makeEditable(record, id, taskDesc)
     container.addEventListener('click', function (e) {
         if (e.target.getAttribute('class') === 'fa fa-xmark') {
@@ -212,6 +223,7 @@ function handleEdit(record, id, taskDesc) {
     })
 
     window.addEventListener('click', function (e) {
+        editedTaskId = null;
         getTasks();
     }, { once: true })
 
@@ -271,6 +283,8 @@ categoryBtnsField.addEventListener("click", function (e) {
     if (e.target.getAttribute("class") === "category-btn")
         toggleButtons(categoryBtns, e.target);
     categoryOrderFlag = e.target.getAttribute("id");
+    console.log('here')
+    getTasks()
 });
 
 //Listener on sorting buttons to highlign the one that is clicked
@@ -278,4 +292,7 @@ sortingBtnsField.addEventListener("click", function (e) {
     if (e.target.getAttribute("class") === "sorting-btn")
         toggleButtons(sortingBtns, e.target);
         sortingOrderFlag = e.target.getAttribute("id");
+        getTasks()
+    console.log('there')
+
 });
