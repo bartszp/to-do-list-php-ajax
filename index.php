@@ -54,8 +54,8 @@ $_SESSION['checkpoint_1'] = 'check1';
                 <div class="categories-buttons">
                     <button class="category-btn" id="alphabetical">Task</button>
                     <button class="category-btn" id="regdate">Registration Time</button>
-                    <button class="category-btn" id="alphabetical">Due Date</button>
-                    <button class="category-btn" id="alphabetical">Priority</button>
+                    <button class="category-btn" id="duedate">Due Date</button>
+                    <button class="category-btn" id="priority">Priority</button>
 
                 </div>
             </div>

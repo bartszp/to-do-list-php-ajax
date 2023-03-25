@@ -15,8 +15,16 @@ let categoryBtns = document.getElementsByClassName("category-btn");
 let categoryBtnsField = document.getElementsByClassName("categories-buttons")[0];
 let sortingBtns = document.getElementsByClassName("sorting-btn");
 let sortingBtnsField = document.getElementsByClassName("sorting-buttons")[0];
-
+let categoryOrderFlag = "regdate";
+let sortingOrderFlag = "desc";
 console.log(sortingBtns[1]);
+
+//Activate "Registration Time" button and sorting in descending order as the defualt one
+toggleButtons(categoryBtns, document.getElementById(categoryOrderFlag));
+toggleButtons(sortingBtns, document.getElementById(sortingOrderFlag));
+
+
+
 
 //Load all task from data base and display them
 getTasks();
@@ -50,8 +58,24 @@ function convertTimestamp(duedate) {
     return ordinalDay + " of " + month;
 }
 
+function sortingTasks(tasksArray, category, order) {
+    //Converting array of object to array of arrays
+    let arrayOfArrays = tasksArray.map(elem => {
+        let result = [];
+        for (let i = 0; i < Object.keys(elem).length; i++) {
+            result.push(Object.entries(elem)[i][1]);
+        }
+        console.log(result);
+        return result;
+    })
+    return arrayOfArrays
+}
 
-convertTimestamp(2147483647)
+let obj = {
+    a: 1,
+    b: 2,
+}
+
 
 
 //Load all task from data base and display them
@@ -60,6 +84,7 @@ function getTasks() {
     xhr.open('GET', 'list.php', true);
     xhr.onload = function () {
         let tasksArray = (JSON.parse(this.responseText));
+        sortingTasks(tasksArray);
         clearTasksList();
         displayTasksList(tasksArray);
         editFlag = false;
@@ -162,11 +187,12 @@ container.addEventListener('click', function (e) {
 
 container.addEventListener("dblclick", function (e) {
     let id;
-    if(e.target.getAttribute("class")=== "record"){
+    if (e.target.getAttribute("class") === "record") {
         console.log("eneter");
         id = e.target.getAttribute('id');
     } else {
-    id = e.target.parentElement.getAttribute('id');}
+        id = e.target.parentElement.getAttribute('id');
+    }
     let record = document.getElementById(id);
     let taskDesc = document.getElementById(`task-desc-${id}`).innerText;
     handleEdit(record, id, taskDesc);
@@ -232,22 +258,24 @@ function updateTask(id, updatedTaskDesc) {
 
 
 //Highlight clicked button
-function toggleButtons(buttons, activeButton){
+function toggleButtons(buttons, activeButton) {
     buttons = Array.from(buttons);
-    buttons.forEach((elem)=>{
+    buttons.forEach((elem) => {
         elem.classList.remove("active-btn");
     })
     activeButton.classList.add("active-btn");
 }
 
 //Listener on category buttons to highlight the one that is clicked
-categoryBtnsField.addEventListener("click", function(e){
-    if(e.target.getAttribute("class") === "category-btn")
-    toggleButtons(categoryBtns,e.target);
+categoryBtnsField.addEventListener("click", function (e) {
+    if (e.target.getAttribute("class") === "category-btn")
+        toggleButtons(categoryBtns, e.target);
+    categoryOrderFlag = e.target.getAttribute("id");
 });
 
 //Listener on sorting buttons to highlign the one that is clicked
-sortingBtnsField.addEventListener("click", function(e){
-    if(e.target.getAttribute("class") === "sorting-btn")
-    toggleButtons(sortingBtns, e.target);
+sortingBtnsField.addEventListener("click", function (e) {
+    if (e.target.getAttribute("class") === "sorting-btn")
+        toggleButtons(sortingBtns, e.target);
+        sortingOrderFlag = e.target.getAttribute("id");
 });
